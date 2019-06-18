@@ -1,26 +1,36 @@
-import React from 'react';
+import * as React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ChatSend from 'components/chat/send';
+import ChatDisplay from 'components/chat/display';
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface Props {
+}
+
+interface State {
+  message: string;
+  messageDisplay: string;
+}
+
+interface ConnectionData {
+    data: string;
+}
+
+class App extends React.Component<Props, State> {
+
+  render() {
+    return (
+    // @todo - wrap this in contxt so they are the same conneciton.
+      <div className="App">
+
+        <ChatDisplay />
+
+        <ChatSend />
+
+      </div>
+    );
+
+  }
 }
 
 export default App;
