@@ -1,3 +1,4 @@
+import { AuthInterface } from 'auth';
 
 interface connection {
 
@@ -11,17 +12,19 @@ interface ConnectionData {
 export default class Connector {
 
   connection = WebSocket.prototype;
+  auth: AuthInterface;
 
-  constructor() {
-
+  constructor(auth: AuthInterface) {
+    this.auth = auth;
+    // @todo update to pull from .env
     this.connection = new WebSocket('ws://127.0.0.1:9876');
     this.connection.onopen = this.onopen;
-    //this.connection.onmessage = this.onmessage;
     this.send = this.send.bind(this);
 
   };
 
   onopen() {
+    // Look to add a better notification.
     console.log("Connection established!");
   };
 
@@ -30,22 +33,17 @@ export default class Connector {
   };
 
   getId() {
-    let id: number = Number(localStorage.getItem('userId'));
-
-    if (!id) {
-      id = Math.floor((Math.random() * 50) + 1);
-      localStorage.setItem('userId', String(id));
-    }
-
-    return id;
+    return this.auth.getAccessToken();
   }
 
-  send(message: string) {
+  async send(message: string) {
     const date: Date = new Date();
+    const profile = await this.auth.getProfile();
     var data = {
       user: this.getId(),
       message: message,
-      date: date.toISOString()
+      date: date.toISOString(),
+      picture: profile.picture
     };
 
     var blob = new Blob([JSON.stringify(data, null, 2)], {type : 'application/json'});

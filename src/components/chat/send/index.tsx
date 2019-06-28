@@ -1,9 +1,10 @@
 import * as React from 'react';
 import connector from 'connector';
-
-const service = new connector();
+import {AuthInterface } from 'auth';
+import SendIcon from 'images/send.svg';
 
 interface Props {
+  auth: AuthInterface
 }
 
 interface State {
@@ -15,7 +16,7 @@ interface ConnectionData {
 }
 
 export default class ChatSend extends React.Component<Props, State> {
-
+  service: any;
 
   constructor(props: any) {
     super(props);
@@ -23,6 +24,8 @@ export default class ChatSend extends React.Component<Props, State> {
     this.sendMessage = this.sendMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.keyDown = this.keyDown.bind(this);
+
+    this.service = new connector(props.auth);
 
     this.state = {
       message: '',
@@ -34,7 +37,7 @@ export default class ChatSend extends React.Component<Props, State> {
     if (this.state.message === '') {
       return;
     }
-    service.send(this.state.message);
+    this.service.send(this.state.message);
     this.setState({message: ''});
   }
 
@@ -51,27 +54,40 @@ export default class ChatSend extends React.Component<Props, State> {
   render() {
     return (
       <div style={{
-        padding: '12px',
         display: 'flex',
         position: 'relative',
+        background: '#f6f4fc',
+        padding: '0px 12px 12px',
       }}>
-        <input type="text" name="message" value={this.state.message} onChange={this.handleChange} onKeyDown={this.keyDown} style={{
-          padding: '10px 12px',
-          border: 0,
-          width: '100%',
-          boxShadow: '2px 5px 15px #dcdbdb',
-          paddingRight: '48px',
-        }}/>
+        <input type="text"
+          name="message"
+          value={this.state.message}
+          onChange={this.handleChange}
+          onKeyDown={this.keyDown}
+          placeholder="Type a message.."
+          style={{
+            padding: '18px 48px 18px 18px',
+            border: 0,
+            width: '100%',
+            boxShadow: '2px 5px 15px #dcdbdb',
+            borderRadius: '6px',
+          }}/>
         <button onClick={this.sendMessage} style={{
           background: '#e91e63',
           padding: '6px 10px',
           border: 0,
           color: '#ffffff',
           position: 'absolute',
-          top: '16px',
-          right: '20px',
+          top: '8px',
+          right: '18px',
           borderRadius: '50%',
-        }}>S</button>
+          width: '40px',
+          height: '35px',
+          backgroundImage: `url('${SendIcon}')`,
+          backgroundPosition: 'center',
+          backgroundSize: '20px',
+          backgroundRepeat: 'no-repeat',
+        }}></button>
       </div>
     );
 

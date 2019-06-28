@@ -1,0 +1,24 @@
+@import "../../../settings";
+
+.profile {
+
+  &__avatar {
+    margin: $base-spacing-unit-x2;
+    border-radius: 50%;
+    border: 4px solid map-get($colors, 'white');
+    max-width: 80px;
+    margin: auto;
+
+    > img {
+      border-radius: 50%;
+      display: block;
+      max-width: 100%;
+      width: 100%;
+    }
+  }
+
+  &__name {
+    font-size: 18px;
+    text-align: center;
+  }
+}

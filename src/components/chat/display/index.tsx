@@ -1,10 +1,10 @@
 import * as React from 'react';
 import connector from 'connector';
 import MessageDisplay from './Message';
-
-const service = new connector();
+import {AuthInterface } from 'auth';
 
 interface Props {
+  auth: AuthInterface
 }
 
 interface State {
@@ -16,6 +16,7 @@ interface ConnectionData {
 }
 
 export default class ChatDisplay extends React.Component<Props, State> {
+  service: any;
 
   constructor(props: any) {
     super(props);
@@ -25,7 +26,8 @@ export default class ChatDisplay extends React.Component<Props, State> {
     };
 
     // @todo - update dont really want this here....
-    service.connection.onmessage = this.handleIncomingMessage.bind(this);
+    this.service = new connector(props.auth);
+    this.service.connection.onmessage = this.handleIncomingMessage.bind(this);
   }
 
   handleIncomingMessage(e: ConnectionData) {
@@ -41,7 +43,7 @@ export default class ChatDisplay extends React.Component<Props, State> {
 
   render() {
     const items = this.state.messages.map(message => {
-      return(<MessageDisplay currentUserId={service.getId()} message={message} />)
+      return(<MessageDisplay currentUserId={this.service.getId()} message={message} />)
     })
 
     return (

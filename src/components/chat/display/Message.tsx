@@ -13,6 +13,7 @@ interface MessageData {
   user: number;
   message: string;
   date: string;
+  picture: string;
 }
 
 export default class MessageDisplay extends React.Component<Props, State> {
@@ -25,7 +26,6 @@ export default class MessageDisplay extends React.Component<Props, State> {
     };
 
     this.showDetails = this.showDetails.bind(this);
-    console.log(props.message);
   }
 
   convertDate(dateString: string) {
@@ -42,15 +42,46 @@ export default class MessageDisplay extends React.Component<Props, State> {
     const message: MessageData = this.props.message;
 
     const { currentUserId } = this.props;
-    const bg = (message.user === currentUserId) ? '#03a9f4' : '#808080'
-    const dir = (message.user === currentUserId) ? 'flex-end' : 'flex-start';
+
+    let bg;
+    let dir;
+
+    switch (message.user) {
+      case currentUserId:
+        bg = '#03a9f4';
+        dir = 'flex-end'
+        break;
+      case 0:
+        bg = '#e91d63';
+        dir = 'center';
+        break;
+      default:
+        bg = '#808080';
+        dir = 'flex-start';
+        break;
+    }
 
     return (
       <div className='message' style={{
         marginBottom: '12px',
         alignSelf: dir,
       }}>
-        <span className="message__author"></span>
+        <span className="message__author" style={{
+          display: 'inline-block',
+          verticalAlign: 'top',
+          width: '35px',
+          marginRight: '10px',
+        }}>
+          {message.picture &&
+            <img src={message.picture} style={{
+              borderRadius: '50%',
+              height: '100%',
+              position: 'relative',
+              width: '100%',
+              zIndex: 1,
+            }} alt={'User Picture.'}/>
+          }
+        </span>
         <span className="message__text"
           onClick={this.showDetails}
           style={{
